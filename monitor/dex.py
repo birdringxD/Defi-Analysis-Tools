@@ -20,18 +20,18 @@ df = pd.DataFrame(columns=[
        # '池2'
     ])
 i = 0
-text_all = ""
-#bot = telebot.TeleBot("1392579799:AAGzEhVwQMrPbBEd2BfUFz_bI4M-ODgzNhg")
 
-# display = Display(visible=0, size=(800, 600))
-# display.start()
+bot = telebot.TeleBot("1392579799:AAGzEhVwQMrPbBEd2BfUFz_bI4M-ODgzNhg")
+text_all = " ------ \n"
+display = Display(visible=0, size=(800, 600))
+display.start()
 options = webdriver.ChromeOptions()
 #options.add_argument("--enable-javascript")
-#options.add_argument('--headless')
+options.add_argument('--headless')
 options.add_argument('--disable-gpu')
 options.add_argument("--no-sandbox")
 
-driver = webdriver.Chrome(chrome_options=options)
+driver = webdriver.Chrome(executable_path='../driver/chromedriver', chrome_options=options)
 
 list = ["0xdd77c93199064a53e1db19ee0930bcdf7c9999f4",
         "0x00c70e8b3c9d0e0adb85993382abaae2a11c5d96",
@@ -75,11 +75,12 @@ for list in list :
             ]
 
     i = i + 1
-    text = "滴滴滴 现在是实时播报：" + (price) + "  当前池子里有：" + (pool_num[0].replace(',', '')) + " " +  (pool_num[1])
-    text_all = text_all + text + "\n"
+    text = (price) + "  当前池子里有：" + (pool_num[0].replace(',', '')) + " " +  (pool_num[1])
+    text_all = text_all + text + "\n ------\n"
 
+bot.send_message("-472312939", text_all)
 print(df.to_string(index = False))
-df.to_csv('./dex.csv', index = False)
+#df.to_csv('./dex.csv', index = False)
 #driver.find_element_by_css_selector('sc-ifAKCX hWioQc sc-jbKcbu sc-gGBfsJ cqJbMq').click()
 
 #print(driver.save_screenshot)

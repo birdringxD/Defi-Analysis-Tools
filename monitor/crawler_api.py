@@ -3,7 +3,7 @@ import requests
 import json
 import pandas as pd
 import datetime
-
+import telebot
 
 def run():
     t = int(round(time.time() * 1000))
