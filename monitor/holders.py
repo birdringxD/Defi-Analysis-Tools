@@ -67,7 +67,7 @@ def holder():
     print("total tokens: " + str(total))
     print("old_total tokens: " + str(old_total))
     if(total <= old_total * 0.98) : 
-        text = "！可乐top50用户持有总量降低超过2%：从" + str(old_total) + "减少到" + str(total)
+        text = "可乐top50用户持有总量降低超过2%：从" + str(old_total) + "减少到" + str(total)
         text_all = text_all + text + "\n ------\n"
     #print(df.to_string(index = False))
 
