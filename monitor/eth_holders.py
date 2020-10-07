@@ -40,17 +40,22 @@ def eth_holder():
             items[i * 2],
             items[i * 2 + 1]
         ]
-        total = total + float(items[i * 2 + 1])
+        if (items[i * 2] != '0x00c70e8b3c9d0e0adb85993382abaae2a11c5d96' and items[i * 2] != '0xebca2f0306c62cbe7da2808dacc147ec447936af' and items[i * 2] != '0xd11684e2ea44128c26877376cb75b9c36e8381dd') :
+            total = total + float(items[i * 2 + 1])
 
 
     old_df = pd.read_csv('./eth_holders.csv')
-    old_total = old_df['holders_count'].sum()
+    old_total = 0
+    for i in range(0, 50):
+        if (old_df.iloc[i].at['holder_address'] != '0x00c70e8b3c9d0e0adb85993382abaae2a11c5d96' and old_df.iloc[i].at['holder_address'] != '0xebca2f0306c62cbe7da2808dacc147ec447936af' and old_df.iloc[i].at['holder_address'] != '0xd11684e2ea44128c26877376cb75b9c36e8381dd') :
+            old_total = old_total + float(old_df.iloc[i].at['holders_count'])
+
 
     print("total tokens: " + str(total))
     print("old_total tokens: " + str(old_total))
 
     if(total <= old_total * 0.98):
-        text = "Light top50用户持有总量降低超过2%：从" + str(old_total) + "减少到" + str(total)
+        text = "! Light top50真实用户持有总量降低超过2%：从" + str(old_total) + "减少到" + str(total)
         text_all = text_all + text + "\n ------\n"
 
     for i in range(0, 50):

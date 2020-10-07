@@ -26,6 +26,7 @@ if __name__=="__main__":
     dex.dex()
     holders.holder()
     message = eth_holders.eth_holder()
-    tg.send(message)
+    print(message)
+    #tg.send(message)
     #bot.send_message("-472312939", text_all)
 

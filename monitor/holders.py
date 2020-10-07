@@ -39,8 +39,8 @@ def holder():
         text = requests.get(url).text
         data = json.loads(text)
 
-        h_text = requests.get(h_url).text
-        h_data = json.loads(h_text)
+        #h_text = requests.get(h_url).text
+        #h_data = json.loads(h_text)
 
         print(tokens_name)
         total = 0
@@ -56,19 +56,27 @@ def holder():
                 #float(int(total_supply_with_decimals) / 1000000000000000000),
             ]
             #print(df)
-            total = total + float(float(balance) / 1000000)
+            if (holder_address != 'TLjiPFnSzx6sYGhWMXQZhFhESvWTAh3e8d' and holder_address != 'TKH4HPMPjxR2Q93XBVfQrpGiBpyjBwBG6P') :
+                total = total + float(float(balance) / 1000000)
             cnt = cnt + 1
 
     old_df = pd.read_csv('./holders.csv') 
-    old_total = old_df['holders_count'].sum() 
+
+    old_total = 0
+    for i in range(0, 50):
+        if (old_df.iloc[i].at['holder_address'] != 'TLjiPFnSzx6sYGhWMXQZhFhESvWTAh3e8d' and old_df.iloc[i].at['holder_address'] != 'TKH4HPMPjxR2Q93XBVfQrpGiBpyjBwBG6P') : 
+            old_total = old_total + float(old_df.iloc[i].at['holders_count'])
+
     #print(old_df.to_string(index = False))
     #print('time cost: ',time_end-time_start,'s')
 
     print("total tokens: " + str(total))
     print("old_total tokens: " + str(old_total))
+
+
     if(total <= old_total * 0.98) : 
-        text = "可乐top50用户持有总量降低超过2%：从" + str(old_total) + "减少到" + str(total)
-        text_all = text_all + text + "\n ------\n"
+        text = "! 可乐top50真实用户持有总量降低超过2%：从" + str(old_total) + "减少到" + str(total)
+        main.text_all = main.text_all + text + "\n ------\n"
     #print(df.to_string(index = False))
 
     for i in range(0, 50):
