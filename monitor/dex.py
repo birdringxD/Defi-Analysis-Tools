@@ -1,6 +1,4 @@
 #-*-coding:utf8-*-
-
-
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver import ActionChains
@@ -10,76 +8,77 @@ import pandas as pd
 import re
 import telebot
 from pyvirtualdisplay import Display
+import main
 
-df = pd.DataFrame(columns=[
-        '名称', 
-        '币价',
-        #'流通量', 
-        '更新时间', 
-        '池子',
-       # '池2'
-    ])
-i = 0
+def dex():
+    df = pd.DataFrame(columns=[
+            '名称', 
+            '币价',
+            '更新时间', 
+            '池子',
+        ])
+    i = 0
 
-bot = telebot.TeleBot("1392579799:AAGzEhVwQMrPbBEd2BfUFz_bI4M-ODgzNhg")
-text_all = " ------ \n"
-display = Display(visible=0, size=(800, 600))
-display.start()
-options = webdriver.ChromeOptions()
-#options.add_argument("--enable-javascript")
-options.add_argument('--headless')
-options.add_argument('--disable-gpu')
-options.add_argument("--no-sandbox")
+    
+    #display = Display(visible=0, size=(800, 600))
+    #display.start()
 
-driver = webdriver.Chrome(executable_path='../driver/chromedriver', chrome_options=options)
+    options = webdriver.ChromeOptions()
+    #options.add_argument('--headless')
+    options.add_argument('--disable-gpu')
+    options.add_argument("--no-sandbox")
 
-list = ["0xdd77c93199064a53e1db19ee0930bcdf7c9999f4",
-        "0x00c70e8b3c9d0e0adb85993382abaae2a11c5d96",
-        "0xd11684e2ea44128c26877376cb75b9c36e8381dd",
-]
+    #driver = webdriver.Chrome(executable_path='../driver/chromedriver', chrome_options=options)
+    driver = webdriver.Chrome(chrome_options=options)
 
-for list in list :
-    url = "https://sushiswap.vision/pair/%s" % (list)
-    driver.get(url)
-    time.sleep(15)
+    list = ["0xdd77c93199064a53e1db19ee0930bcdf7c9999f4",
+            "0x00c70e8b3c9d0e0adb85993382abaae2a11c5d96",
+            "0xd11684e2ea44128c26877376cb75b9c36e8381dd",
+    ]
 
-    ac = driver.find_element_by_xpath('//button[@class="sc-ifAKCX hWioQc sc-jbKcbu sc-gGBfsJ cqJbMq"]')
-    ActionChains(driver).move_to_element(ac).click(ac).perform()
+    for list in list :
+        url = "https://sushiswap.vision/pair/%s" % (list)
+        driver.get(url)
+        time.sleep(12)
 
-    t = datetime.datetime.now()
-    tt = t.strftime('%Y.%m.%d-%H:%M:%S')
-    print(tt)
+        ac = driver.find_element_by_xpath('//button[@class="sc-ifAKCX hWioQc sc-jbKcbu sc-gGBfsJ cqJbMq"]')
+        ActionChains(driver).move_to_element(ac).click(ac).perform()
 
-    name = driver.find_element_by_xpath('//span[@class="sc-hXRMBi glnILI"]').text
-    print(name)
+        t = datetime.datetime.now()
+        tt = t.strftime('%Y.%m.%d-%H:%M:%S')
+        print(tt)
 
-    price = driver.find_element_by_xpath('//div[@class="sc-bdVaJa jofVNV css-flugrv"]').text
-    p1 = re.compile(r'[(](.*?)[)]', re.S)
-    price_num = re.findall(p1, price)
-    print(price_num[0][1:])
-    print(price)
+        name = driver.find_element_by_xpath('//span[@class="sc-hXRMBi glnILI"]').text
+        print(name)
+
+        price = driver.find_element_by_xpath('//div[@class="sc-bdVaJa jofVNV css-flugrv"]').text
+        p1 = re.compile(r'[(](.*?)[)]', re.S)
+        price_num = re.findall(p1, price)
+        #print(price_num[0][1:])
+       # print(price)
+
+        top = driver.find_element_by_xpath('//div[@class="sc-VigVT cBSjqC"]')
+        pool = top.find_element_by_xpath('//div[@class="sc-kgoBCf bkBlZq"]').text
+        #print(pool)
+        pool_num = pool.split("\n")
+        #print(pool_num)
+        #print(pool_num[0].replace(',', ''))
+
+        df.loc[i] = [
+                name,
+                price,
+                tt,
+                pool_num,
+                ]
+        i = i + 1
+        text = (price) + " 池子里有：" + (pool_num[0].replace(',', '')) + " " +  (pool_num[1])
+        main.text_all = main.text_all + text + "\n ------\n"
+
+    #print(df.to_string(index = False))
+    #df.to_csv('./dex.csv', index = False)
+    return main.text_all
 
 
-    top = driver.find_element_by_xpath('//div[@class="sc-VigVT cBSjqC"]')
-    pool = top.find_element_by_xpath('//div[@class="sc-kgoBCf bkBlZq"]').text
-    print(pool)
-    pool_num = pool.split("\n")
-    print(pool_num)
-    #print(pool_num[0].replace(',', ''))
-
-    df.loc[i] = [
-            name,
-            price,
-            tt,
-            pool_num,
-            ]
-
-    i = i + 1
-    text = (price) + "  当前池子里有：" + (pool_num[0].replace(',', '')) + " " +  (pool_num[1])
-    text_all = text_all + text + "\n ------\n"
-
-bot.send_message("-472312939", text_all)
-print(df.to_string(index = False))
 #df.to_csv('./dex.csv', index = False)
 #driver.find_element_by_css_selector('sc-ifAKCX hWioQc sc-jbKcbu sc-gGBfsJ cqJbMq').click()
 

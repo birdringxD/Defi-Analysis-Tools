@@ -2,8 +2,9 @@ import time
 import requests
 import json
 import pandas as pd
+import main
 
-def run():
+def holder():
     t = int(round(time.time() * 1000))
     time_start=time.time()
 
@@ -42,9 +43,6 @@ def run():
         h_data = json.loads(h_text)
 
         print(tokens_name)
-
-        #holders_count = h_data['trc20_tokens'][0]['holders_count']
-        #total_supply_with_decimals = h_data['trc20_tokens'][0]['total_supply_with_decimals']
         total = 0
         for i in range(0, 50):
             holder_address = data["trc20_tokens"][i]["holder_address"]
@@ -68,26 +66,26 @@ def run():
 
     print("total tokens: " + str(total))
     print("old_total tokens: " + str(old_total))
-
+    if(total <= old_total * 0.98) : 
+        text = "！可乐top50用户持有总量降低超过2%：从" + str(old_total) + "减少到" + str(total)
+        text_all = text_all + text + "\n ------\n"
     #print(df.to_string(index = False))
-
-
 
     for i in range(0, 50):
         old_num = old_df.iloc[i].at['holders_count']
         new_num = df.iloc[i].at['holders_count']
-        if(new_num <= old_num * 0.8) : 
+        if(new_num <= old_num * 0.85) : 
             print(df.iloc[i].at['holder_address'], old_num, new_num)
-
-
+            text = "可乐持币排名变动： 排名第" + str(i+1) + "的用户持仓减少超过15%， 从" + str(old_num) + "减少到" + str(new_num)
+            main.text_all = main.text_all + text + "\n ------\n"
 
     df.to_csv('./holders.csv', index = False)
-
     time_end=time.time()
     print('time cost: ',time_end-time_start,'s')
-    return df
+    return main.text_all
+
 
 
 if __name__=="__main__":
-    run()
+    holder()
 

@@ -4,20 +4,17 @@ import json
 import pandas as pd
 import datetime
 import telebot
+import main
 
-def run():
+def crawler():
     t = int(round(time.time() * 1000))
     today=datetime.date.today()
     onemonth=datetime.timedelta(days=30)
     lastmoth=int((today-onemonth).strftime("%Y%m%d"))
     today = int(today.strftime("%Y%m%d"))
 
-
     # transaction api
-
     tokens_list = [
-        #"bitcoin",
-        #"ethereum",
         #"tether",
         #"sun",
         #"jfi",
@@ -46,18 +43,14 @@ def run():
     ])
 
     i = 0
-
     for tokens_list in tokens_list: 
-
         #print (tokens_list)
-
         url = "https://fxhapi.feixiaohao.com/public/v1/ticker?code=%s" % (tokens_list)
         #print(url)
         text = requests.get(url).text
         data = json.loads(text)
         #print(data)
         h_url = 'https://dncapi.bqrank.net/api/v3/coin/history?coincode=%s&begintime=%s&endtime=%s&page=1&per_page=100&webp=1' %(tokens_list, lastmoth, today)
-
         h_text = requests.get(h_url).text
         h_data = json.loads(h_text)
 
@@ -74,20 +67,15 @@ def run():
         available_supply = data[0]['available_supply']  
         price_usd = data[0]['price_usd']
         volume_24h_usd = data[0]['volume_24h_usd']
-
         addrcount = holder_data['data']['top']['addrcount']
-
-        #change_percent = data['data']['change_percent']
-
+        # change_percent = data['data']['change_percent']
         percent_change_1h = data[0]['percent_change_1h']
         percent_change_24h = data[0]['percent_change_24h']
         percent_change_7d = data[0]['percent_change_7d']
-
         # change_hour = c_data['data']['change_hour']
         # change_day = c_data['data']['change_day']
         # change_week = c_data['data']['change_week']
-
-        #changerate = h_data['data']['data']['changerate']
+        # changerate = h_data['data']['data']['changerate']
         high = h_data['data']['data']['high']
         low = h_data['data']['data']['low']
         high_week = h_data['data']['data']['high_week']
@@ -97,7 +85,8 @@ def run():
         last_updated = time.localtime(int(last_updated)) 
         last_updated = time.strftime("%Y-%m-%d %H:%M:%S", last_updated) 
 
-
+        text = "当前" + (tokens_list) + "的价格为： $" + str(price_usd)
+        main.text_all = main.text_all + text + "\n ------\n"
         print(price_usd)
 
         df.loc[i] = [
@@ -119,12 +108,12 @@ def run():
             last_updated
         ]
 
-
         i += 1
 
-    print(df.to_string(index = False))
-    df.to_csv('./coins_list.csv', index = False)
-    return df
-#print(tokens_list, int(max_supply), int(circulating_supply), price_cny, change_percent)
+    #print(df.to_string(index = False))
+    #df.to_csv('./coins_list.csv', index = False)
+    return main.text_all
+
+
 if __name__=="__main__":
-    run()
+    crawler()
