@@ -7,7 +7,9 @@ bot = telebot.TeleBot(TOKEN)
 def send(text):
     bot.send_message("-472312939", text)
 
+def send_warning(text) :
+    bot.send_message("-497234371", text)
 
 if __name__=="__main__":
     #init()
-    send("测试")    
+    send_warning("测试")    

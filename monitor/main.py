@@ -1,5 +1,5 @@
 #-*-coding:utf8-*-
-
+import gc
 import requests
 import json
 from selenium import webdriver
@@ -22,11 +22,12 @@ text_all = ""
 
 if __name__=="__main__":
 
-    crawler_api.crawler()
+   # crawler_api.crawler()
     dex.dex()
     holders.holder()
     message = eth_holders.eth_holder()
-    print(message)
-    #tg.send(message)
+    #print(message)
+    tg.send(message)
+    gc.enable()
     #bot.send_message("-472312939", text_all)
 
