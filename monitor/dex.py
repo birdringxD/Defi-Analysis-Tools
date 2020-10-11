@@ -24,10 +24,9 @@ def dex():
     display.start()
 
     options = webdriver.ChromeOptions()
-    options.add_argument('--headless')
-    options.add_argument('--disable-gpu')
-    options.add_argument("--no-sandbox")
-    options.add_argument('--disable-dev-shm-usage')
+    options.add_argument('headless')
+    options.add_argument('disable-gpu')
+    options.add_argument("no-sandbox")
     driver = webdriver.Chrome(executable_path='../../driver/chromedriver', chrome_options=options)
     #driver = webdriver.Chrome(chrome_options=options)
 
