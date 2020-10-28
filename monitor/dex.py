@@ -48,6 +48,25 @@ def dex():
 
 ### COLA END
 
+### SAVE
+
+    url = "https://justswap.io/#/scan/detail/trx/TKeMUmuAiqyKpTKT1Z9TMtzA84bdm4hCyh"
+    driver.get(url)
+    time.sleep(10)
+    #print(driver.page_source)
+
+   # price = driver.find_element_by_xpath('//div[@class="pr-l"]').find_element_by_xpath('//span[@class="left10"]').text
+    price = driver.find_elements_by_xpath('//div[@class="pr-price top10 flex"]')[0].text
+    pattern = re.compile('.*?\)', re.S)
+    price = re.findall(pattern, price)
+    #print(price)
+    #print(price[0])
+    text = (price[0])
+    main.text_all = main.text_all + text + "\n ------\n"
+
+### SAVE END
+
+
 ### TGAL
 
     url = "https://justswap.io/#/scan/detail/trx/TGq2YxmUStqSpaVrg5Lqc3y1yrcbP4VYgU"
