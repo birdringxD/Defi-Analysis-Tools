@@ -1,5 +1,4 @@
 *.csv
 .idea
 __pycache__
-/__pycache__
 monitor/tg.py
