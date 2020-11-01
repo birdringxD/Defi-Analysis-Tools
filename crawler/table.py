@@ -3,6 +3,8 @@ from selenium import webdriver
 import time
 import pandas as pd
 import numpy as np
+import requests
+import json
 
 text = ''
 
@@ -77,31 +79,41 @@ def run():
     'Early_price3', 'Warning3', 'Liquidation3', 'Percentage3',
     ]
 
+### Atom sourse change
+    url = "https://www.binance.com/api/v3/ticker/price?symbol=ATOMUSDT"
+    html = requests.get(url).text
+    data = json.loads(html)
+    price = float(data['price'])
+    df.iloc[2].at['Price'] = price
+### 
 
     df['Speed'] =  10000 / (10000 + df['Value']) * df['Unknown']
-
+    df['Early_price'] = df['Early_price']
     df['Warning'] = (df['Early_price'] * 13 / 15)
     df['Liquidation'] = (df['Early_price'] * 115 / 150)
-    df.iloc[2].at['Warning'] = df.iloc[2].at['Warning'] * 15 / 13 * 14 /18
-    df.iloc[8].at['Warning'] = df.iloc[2].at['Warning'] * 15 / 13 * 14 /18
-    df.iloc[2].at['Liquidation'] = df.iloc[2].at['Liquidation'] * 150 / 115 * 12 /18
-    df.iloc[8].at['Liquidation'] = df.iloc[2].at['Liquidation'] * 150 / 115 * 12 /18
+
+    df.iloc[2].at['Warning'] = df.iloc[2].at['Early_price'] * 14 / 18
+    #print(df.iloc[2].at['Early_price'])
+    #print(df.iloc[2].at['Early_price'] * 14 / 18)
+    df.iloc[8].at['Warning'] = df.iloc[8].at['Early_price'] * 14 / 18
+    df.iloc[2].at['Liquidation'] = df.iloc[2].at['Early_price'] * 12 / 18
+    df.iloc[8].at['Liquidation'] = df.iloc[8].at['Early_price'] * 12 / 18
     df['Percentage'] = (df['Price'] - df['Warning']) / df['Warning']
 
     df['Warning2'] = df['Early_price2'] * 13 / 15
     df['Liquidation2'] = df['Early_price2'] * 115 / 150
-    df.iloc[2].at['Warning2'] = df.iloc[2].at['Warning2'] * 15 / 13 * 14 /18
-    df.iloc[8].at['Warning2'] = df.iloc[2].at['Warning2'] * 15 / 13 * 14 /18
-    df.iloc[2].at['Liquidation2'] = df.iloc[2].at['Liquidation2'] * 150 / 115 * 12 /18
-    df.iloc[8].at['Liquidation2'] = df.iloc[2].at['Liquidation2'] * 150 / 115 * 12 /18
+    df.iloc[2].at['Warning2'] = df.iloc[2].at['Early_price'] * 14 / 18
+    df.iloc[8].at['Warning2'] = df.iloc[8].at['Early_price'] * 14 / 18
+    df.iloc[2].at['Liquidation2'] = df.iloc[2].at['Early_price'] * 12 / 18
+    df.iloc[8].at['Liquidation2'] = df.iloc[8].at['Early_price'] * 12 / 18
     df['Percentage2'] = (df['Price'] - df['Warning2']) / df['Warning2']
 
     df['Warning3'] = df['Early_price3'] * 13 / 15
     df['Liquidation3'] = df['Early_price3'] * 115 / 150
-    df.iloc[2].at['Warning3'] = df.iloc[2].at['Warning3'] * 15 / 13 * 14 /18
-    df.iloc[8].at['Warning3'] = df.iloc[2].at['Warning3'] * 15 / 13 * 14 /18
-    df.iloc[2].at['Liquidation3'] = df.iloc[2].at['Liquidation3'] * 150 / 115 * 12 /18
-    df.iloc[8].at['Liquidation3'] = df.iloc[2].at['Liquidation3'] * 150 / 115 * 12 /18
+    df.iloc[2].at['Warning3'] = df.iloc[2].at['Early_price'] * 14 / 18
+    df.iloc[8].at['Warning3'] = df.iloc[8].at['Early_price'] * 14 / 18
+    df.iloc[2].at['Liquidation3'] = df.iloc[2].at['Early_price'] * 12 / 18
+    df.iloc[8].at['Liquidation3'] = df.iloc[8].at['Early_price'] * 12 / 18
     df['Percentage3'] = (df['Price'] - df['Warning3']) / df['Warning3']
 
     #df.sort_values('Speed', inplace=True, ascending=False)
@@ -121,13 +133,11 @@ def run():
     df.to_csv('./table.csv')
     per = df['Percentage'].astype(float)
     per = per.sort_values()
-    #print(per.index)
     cnt = 5
     for i in per.index:
         if(cnt > 0):
             text += df.iloc[i].at['Symbol'] + ': ' + str(per[i]) + ' | '
             cnt -= 1
-    #print(text)
     return df
 
 def gettext():
