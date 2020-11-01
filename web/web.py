@@ -8,6 +8,16 @@ from crawler import table
 app = Flask(__name__)
 app.before_request(bind_request_params)
 
+HEADER = '''
+<html>
+    <head>
+    </head>
+    <body>
+'''
+FOOTER = '''
+    </body>
+</html>
+'''
 
 @app.route('/')
 def hello_world():
@@ -17,7 +27,7 @@ def hello_world():
 def get_holders_df():
     #text = request.args.get('id')
     df = get_table()
-    return df.to_html(header="true", table_id="table")
+    return  table.gettext() + df.to_html(header="true", table_id="table")
 
 def get_table():
     df = table.run()

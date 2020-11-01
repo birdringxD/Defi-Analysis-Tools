@@ -4,10 +4,12 @@ import time
 import pandas as pd
 import numpy as np
 
+text = ''
+
 def run():
-
+    global text 
+    text = '预警价格TOP5: | '
     url = 'https://bscscan.com/tokenholdings?a=0xc1db7f59d783e2d0f795b66f175b23d3834c36ee&ps=100&sort=symbol&order=asc'
-
     options = webdriver.ChromeOptions()
     options.add_argument('headless')
     options.add_argument('disable-gpu')
@@ -76,22 +78,33 @@ def run():
     ]
 
 
-    df['Speed'] =  10000 / (10000 + df['Value']) * df['Unknown'].astype(float)
+    df['Speed'] =  10000 / (10000 + df['Value']) * df['Unknown']
 
-
-    df['Warning'] = (df['Early_price'] * 13 / 15).astype(float)
-    df['Liquidation'] = (df['Early_price'] * 115 / 150).astype(float)
-    df['Percentage'] = (df['Price'] - df['Warning']) / df['Warning'].astype(float)
+    df['Warning'] = (df['Early_price'] * 13 / 15)
+    df['Liquidation'] = (df['Early_price'] * 115 / 150)
+    df.iloc[2].at['Warning'] = df.iloc[2].at['Warning'] * 15 / 13 * 14 /18
+    df.iloc[8].at['Warning'] = df.iloc[2].at['Warning'] * 15 / 13 * 14 /18
+    df.iloc[2].at['Liquidation'] = df.iloc[2].at['Liquidation'] * 150 / 115 * 12 /18
+    df.iloc[8].at['Liquidation'] = df.iloc[2].at['Liquidation'] * 150 / 115 * 12 /18
+    df['Percentage'] = (df['Price'] - df['Warning']) / df['Warning']
 
     df['Warning2'] = df['Early_price2'] * 13 / 15
     df['Liquidation2'] = df['Early_price2'] * 115 / 150
+    df.iloc[2].at['Warning2'] = df.iloc[2].at['Warning2'] * 15 / 13 * 14 /18
+    df.iloc[8].at['Warning2'] = df.iloc[2].at['Warning2'] * 15 / 13 * 14 /18
+    df.iloc[2].at['Liquidation2'] = df.iloc[2].at['Liquidation2'] * 150 / 115 * 12 /18
+    df.iloc[8].at['Liquidation2'] = df.iloc[2].at['Liquidation2'] * 150 / 115 * 12 /18
     df['Percentage2'] = (df['Price'] - df['Warning2']) / df['Warning2']
 
     df['Warning3'] = df['Early_price3'] * 13 / 15
     df['Liquidation3'] = df['Early_price3'] * 115 / 150
+    df.iloc[2].at['Warning3'] = df.iloc[2].at['Warning3'] * 15 / 13 * 14 /18
+    df.iloc[8].at['Warning3'] = df.iloc[2].at['Warning3'] * 15 / 13 * 14 /18
+    df.iloc[2].at['Liquidation3'] = df.iloc[2].at['Liquidation3'] * 150 / 115 * 12 /18
+    df.iloc[8].at['Liquidation3'] = df.iloc[2].at['Liquidation3'] * 150 / 115 * 12 /18
     df['Percentage3'] = (df['Price'] - df['Warning3']) / df['Warning3']
 
-    #df.sort_values('Value', inplace=True, ascending=False)
+    #df.sort_values('Speed', inplace=True, ascending=False)
 
     pd.set_option('display.float_format',lambda x : '%.2f' % x)
 
@@ -106,11 +119,24 @@ def run():
     df['Liquidation3'] = df['Liquidation3'].map(lambda x: '%.2f' % x)
     df['Percentage3'] = df['Percentage3'].map(lambda x: '%.2f' % x)
     df.to_csv('./table.csv')
+    per = df['Percentage'].astype(float)
+    per = per.sort_values()
+    #print(per.index)
+    cnt = 5
+    for i in per.index:
+        if(cnt > 0):
+            text += df.iloc[i].at['Symbol'] + ': ' + str(per[i]) + ' | '
+            cnt -= 1
+    #print(text)
     return df
+
+def gettext():
+    return text
 
 if __name__=="__main__":
     run()
-
+    t = gettext()
+    print(t)
 
 
 

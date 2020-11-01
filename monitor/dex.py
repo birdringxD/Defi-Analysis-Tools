@@ -30,6 +30,18 @@ def dex():
     driver = webdriver.Chrome(executable_path='../../driver/chromedriver', chrome_options=options)
     #driver = webdriver.Chrome(chrome_options=options)
 
+### Zeus
+    url = "http://info.zeusswap.finance/pair/0x01b51112e60aec287962fd3bcede51594ff24cda"
+    driver.get(url)
+    time.sleep(10)
+    ac = driver.find_element_by_xpath('//button[@class="sc-ifAKCX hWioQc sc-dNLxif sc-jnlKLf infGov"]')
+    ActionChains(driver).move_to_element(ac).click(ac).perform()
+
+    text = driver.find_element_by_xpath('//div[@class="sc-bdVaJa KpMoH css-flugrv"]').text
+    main.text_all = main.text_all + text + "\n ------\n"
+
+### Zeus END
+
 ### COLA
 
     url = "https://justswap.io/#/scan/detail/trx/TSNWgunSeGUQqBKK4bM31iLw3bn9SBWWTG"
@@ -65,7 +77,6 @@ def dex():
     main.text_all = main.text_all + text + "\n ------\n"
 
 ### SAVE END
-
 
 ### TGAL
 

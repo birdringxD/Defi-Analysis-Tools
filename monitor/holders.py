@@ -75,8 +75,8 @@ def holder():
     print("old_total tokens: " + str(old_total))
 
 
-    if(total <= old_total * 0.98) : 
-        text = "可乐top50真实用户持有总量降低超过2%：从" + str(old_total) + "减少到" + str(total)
+    if(total <= old_total * 0.95) : 
+        text = "可乐top50真实用户持有总量降低超过5%：从" + str(old_total) + "减少到" + str(total)
         tg.send_warning(text)
         main.text_all = main.text_all + text + "\n ------\n"
     #print(df.to_string(index = False))
@@ -84,9 +84,9 @@ def holder():
     for i in range(0, 50):
         old_num = old_df.iloc[i].at['holders_count']
         new_num = df.iloc[i].at['holders_count']
-        if(new_num <= old_num * 0.80) : 
+        if(new_num <= old_num * 0.50) : 
             print(df.iloc[i].at['holder_address'], old_num, new_num)
-            text = "可乐持币排名变动： 排名第" + str(i+1) + "的用户持仓减少超过20%， 从" + str(old_num) + "减少到" + str(new_num)
+            text = "可乐持币排名变动： 排名第" + str(i+1) + "的用户持仓减少超过50%， 从" + str(old_num) + "减少到" + str(new_num)
             main.text_all = main.text_all + text + "\n ------\n"
 
     df.to_csv('./holders.csv', index = False)
