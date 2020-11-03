@@ -9,6 +9,8 @@ import re
 import telebot
 from pyvirtualdisplay import Display
 import main
+import json
+import requests
 
 def dex():
     df = pd.DataFrame(columns=[
@@ -30,8 +32,21 @@ def dex():
     driver = webdriver.Chrome(executable_path='../../driver/chromedriver', chrome_options=options)
     #driver = webdriver.Chrome(chrome_options=options)
 
+
+### KUN
+    url = 'https://mainnet.infura.io/v3/744334c01a994553b8a51c67c931c8d6'
+    s = json.dumps({"jsonrpc":"2.0","id":2,"method":"eth_call","params":[{"data":"0x15e84af900000000000000000000000059d4ccc94a9c4c3d3b4ba2aa343a9bdf95145dd100000000000000000000000065d9bc970aa9b2413027fa339f7f179b3f3f2604","to":"0x461e474e594b211d41bb2ff855aa43e455d93888"},"latest"]})
+    #d = {"jsonrpc":"2.0","id":2,"method":"eth_call","params":[{"data":"0x15e84af900000000000000000000000059d4ccc94a9c4c3d3b4ba2aa343a9bdf95145dd100000000000000000000000065d9bc970aa9b2413027fa339f7f179b3f3f2604","to":"0x461e474e594b211d41bb2ff855aa43e455d93888"},"latest"]}
+    html = requests.post(url, data=s)
+    data = json.loads(html.text)
+    num = int(data['result'], 16)
+    kun = round(num/1000000000000000000, 2)
+    text = '1 KUN = ' + str(kun) + ' QUSD' 
+    main.text_all = main.text_all + text + "\n ------\n"
+### 
+
 ### Zeus
-    url = "http://info.zeusswap.finance/pair/0x01b51112e60aec287962fd3bcede51594ff24cda"
+    url = "http://info.zeusswap.finance/#/pair/0xa9790d715e5bae2ef66932723d68d1bd8d0d6ae4"
     driver.get(url)
     time.sleep(10)
     ac = driver.find_element_by_xpath('//button[@class="sc-ifAKCX hWioQc sc-dNLxif sc-jnlKLf infGov"]')
