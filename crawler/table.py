@@ -79,7 +79,7 @@ def run():
     'Early_price3', 'Warning3', 'Liquidation3', 'Percentage3',
     ]
 
-### Atom sourse change
+### Atom source change
     url = "https://www.binance.com/api/v3/ticker/price?symbol=ATOMUSDT"
     html = requests.get(url).text
     data = json.loads(html)
